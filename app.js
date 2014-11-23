@@ -1,6 +1,6 @@
 angular.module('TinyLights', ['tmCloudClient'], function($provide) {
-      //$provide.value('endpoint', 'http://31.169.50.34:8080');
-      $provide.value('endpoint', 'http://localhost:4000');
+      $provide.value('endpoint', 'http://31.169.50.34:8080');
+      //$provide.value('endpoint', 'http://localhost:4000');
    })
    .controller('AuthController', function($rootScope, $scope, $localStorage, tmAuthSession, tmUser) {
       $scope.user = new tmUser();
@@ -68,14 +68,15 @@ angular.module('TinyLights', ['tmCloudClient'], function($provide) {
             "type": "command",
             "command": "set_output",
             "gpio": {"gpio_0": true,
-                     "gpio_1": true}
+                     "gpio_6": true}
            }}).$create({network: sel[0], device: sel[1]});
       };
       $scope.switchoff = function(sel) {
          new tmMsg({"proto/tm": {
             "type": "command",
             "command": "set_output",
-            "gpio": {"gpio_0": false}
+            "gpio": {"gpio_0": false,
+                     "gpio_6": false}
            }}).$create({network: sel[0], device: sel[1]});
       };
       $scope.provision = function(sel) {
@@ -91,7 +92,7 @@ angular.module('TinyLights', ['tmCloudClient'], function($provide) {
                "gpio_3": {"config": 1, trigger: 2},
                "gpio_4": {"config": 1, trigger: 2},
                "gpio_5": {"config": 1, trigger: 2},
-               "gpio_6": {"config": 1, trigger: 2},
+               "gpio_6": {"config": 0},
                "gpio_7": {"config": 3}
             }
            };
@@ -106,10 +107,10 @@ angular.module('TinyLights', ['tmCloudClient'], function($provide) {
    })
    .directive('modal', function () {
       return {
-         template: '<div class="modal fade">' + 
-            '<div class="modal-dialog">' + 
-               '<div class="modal-content">' + 
-                  '<div class="modal-header">' + 
+         template: '<div class="modal fade">' +
+            '<div class="modal-dialog">' +
+               '<div class="modal-content">' +
+                  '<div class="modal-header">' +
 //                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
                      '<h4 class="modal-title">{{ title }}</h4>' +
                   '</div>' +

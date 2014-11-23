@@ -1,4 +1,4 @@
-/*! tinymesh-lighting-control-0.1.0 (2014-11-15)
+/*! tinymesh-lighting-control-0.1.0 (2014-11-23)
  * Copyright (c) 2014 Tiny Mesh AS;
  * Licensed BSD
  */
