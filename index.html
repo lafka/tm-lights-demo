@@ -1,0 +1,165 @@
+<!doctype html>
+<html ng-app="TinyLights">
+   <head>
+      <meta charset="utf-8" />
+      <title>Tinylights</title>
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+
+      <style type="text/css">
+         body {
+            padding-top:100px;
+            background: #efefef; }
+
+					a { cursor: pointer; }
+
+					.list-group-item.active a { color: #fff; }
+
+         .box {
+            margin: 0;
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 0 2em 3em;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1); }
+
+         .flash-container {
+            margin: 0 auto; }
+
+         #selectors {
+            position: absolute;
+            top: 40px;
+            right: 28px; }
+         .net-selector > button { min-width: 10em; }
+
+         .dropdown-toggle, .menuitem {
+            position: relative;
+            float: left;
+            margin-left: 1em; }
+         .dropdown-toggle:hover .dropdown-menu {
+            display: block; }
+               .dropdown-menu {
+                  margin: 1px 0px 0px 0px; }
+               .dropdown-menu a {
+                  cursor: pointer; }
+               .dropdown-menu span {
+                  display: block;
+                  padding: 3px 20px;
+                  clear: both;
+                  font-weight: normal;
+                  line-height: 1.428571429;
+                  color: #333;
+                  white-space: nowrap; }
+               .dropdown-menu .active a {
+                  color: #FFF;
+                  text-decoration: none;
+                  background-color: #428BCA; }
+      </style>
+   </head>
+
+   <body ng-controller="AuthController" ng-cloak>
+      <div class="container" ng-controller="LoginController">
+				<modal title="Please sign in" visible="!$auth.authenticated">
+         <form name="loginForm"
+            ng-submit="login(auth)">
+						<div ng-show="flash" class="flash-container">
+							<div class="alert alert-{{flashClass || 'info'}}">
+								{{flash}}
+							</div>
+						</div>
+            <div class="form-group" ng-class="{'has-error': loginForm.email.$invalid}">
+               <input name="email" ng-model="auth.email"
+                  type="email" class="form-control"
+                  placeholder="Email address"
+                  required autofocus>
+            </div>
+
+            <div class="form-group"  ng-class="{'has-error': loginForm.password.$invalid}">
+               <input name="password" ng-model="auth.password"
+                  type="password" class="form-control"
+                  placeholder="Password"
+                  ng-minlength="8"
+                  required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" ng-disabled="loginForm.$invalid">Sign in</button>
+         </form>
+        </modal>
+      </div>
+
+      <div class="container" ng-controller="AppController">
+         <div class="box col-md-10 col-md-push-1">
+            <div class="page-header">
+               <h2 class="form-signin-heading">Hello lights!</h2>
+            </div>
+            <div id="selectors" class="row">
+               <div class="menuitem">
+                  <button ng-click="logout()" type="button" class="btn btn-default">
+										Logout <i>({{user.email}})</i>
+									</button>
+               </div>
+            </div>
+
+            <div ng-show="0 === user.networks.length">
+               <div class="alert alert-info">
+                  <h4>Ouch, I'm empty!</h4>
+                  <p>
+                     This <i>organizations context</i> does not contain
+                     any networks. This is surely a mistake, either you should
+                     add a network or switch to a different <i>organizations context</i>
+                  </p>
+               </div>
+            </div>
+
+						<div ng-show="user.networks.length">
+							<ul class="list-group">
+								 <li class="list-group-item"
+										ng-class="{'active': k === net.key}"
+										ng-repeat="k in user.networks"
+										ng-click="setNet(k)">
+										<a>{{k}}</a>
+								 </li>
+							</ul>
+						</div>
+
+						<hr />
+
+						<div ng-show="!net" class="alert alert-info">
+							<p>
+								To get started you need to select a network from the list above
+							</p>
+						</div>
+
+						<div ng-show="net">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Address</th>
+										<th>Type</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="(k, val) in net.devicemap">
+										<td><a ng-href="#/device/{{params.network}}/{{k}}">{{val.name || "Unnamed device"}}</a></td>
+										<td>{{val.address}}</td>
+										<td>{{val.type}}</td>
+										<td class="action-list">
+											<button ng-click="incpwm([net.key, k])" class="btn btn-info" type="button">PWM + 10%</button>
+											<button ng-click="decpwm([net.key, k])" class="btn btn-warning" type="button">PWM - 10%</button>
+											<button ng-click="switchon([net.key, k])" class="btn btn-success" type="button">Turn On</button>
+											<button ng-click="switchoff([net.key, k])" class="btn btn-danger" type="button">Turn Off</button>
+											<button ng-click="provision([net.key, k])" class="btn btn-primary" type="button">Provision</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+      </div>
+
+      <script src="vendor.js"></script>
+      <script src="tm.cloud.client.js"></script>
+      <script src="app.js"></script>
+   </body>
+</html>
+
